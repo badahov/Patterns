@@ -6,6 +6,9 @@ class Setting {
 
 //require_once( 'Setting.php' );
 
+/**
+ * Singleton In AbstractFactory
+ */
 class AppConfig {
     private static $instance;
     private $commsManager;
