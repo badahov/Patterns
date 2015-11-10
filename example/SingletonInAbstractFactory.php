@@ -11,6 +11,7 @@ class AppConfig {
     private $commsManager;
 
     private function __construct() {
+        //Вызывается только один раз
         $this->init();
     }
 
