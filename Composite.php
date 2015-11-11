@@ -47,6 +47,7 @@ class Archer extends Unit {
     }
 }
 
+//Сапер
 class Sapper extends Unit {
     function bombardStrength() {
         return 2;
