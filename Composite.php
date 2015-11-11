@@ -25,18 +25,18 @@ abstract class CompositeUnit extends Unit {
         return $this->units;
     }
 
-    //Удаление боевой единицы
-    function removeUnit( Unit $unit ) {
-        $this->units = array_udiff( $this->units, array( $unit ),
-                function( $a, $b ) { return ( $a === $b )?0:1; } );
-    }
-
     //Добавление боевой единицы
     function addUnit( Unit $unit ) {
         if( in_array( $unit, $this->units, true ) ) {
             return;
         }
         $this->units[] = $unit;
+    }
+
+    //Удаление боевой единицы
+    function removeUnit( Unit $unit ) {
+        $this->units = array_udiff( $this->units, array( $unit ),
+                function( $a, $b ) { return ( $a === $b )?0:1; } );
     }
 }
 
@@ -47,7 +47,6 @@ class Archer extends Unit {
     }
 }
 
-//Сапер
 class Sapper extends Unit {
     function bombardStrength() {
         return 2;
@@ -62,44 +61,37 @@ class LaserCannonUnit extends Unit {
 }
 
 //Армия
-class Army extends Unit {
-    private $units = [];
-
-    function addUnit( Unit $unit ) {
-        if( in_array( $unit, $this->units, true ) ) {
-            return;
-        }
-        $this->units[] = $unit;
-    }
-
-    function removeUnit( Unit $unit ) {
-        $this->units = array_udiff( $this->units, array( $unit ),
-                function( $a, $b ) { return ( $a === $b )?0:1; } );
-    }
+class Army extends CompositeUnit {
 
     //Атакующая сила армии
-    function bombardStrength() {
+    function bombardStrength() {        
         $ret = 0;
-        foreach( $this->units as $unit ) {
+        foreach( $this->units() as $unit ) {
             $ret += $unit->bombardStrength();
         }
         return $ret;
     }
+
 }
 
 //Бронетранспортер
 class TroopCarrier extends CompositeUnit {
+
     function addUnit( Unit $unit ) {
         if( $unit instanceof Cavalry ) {
             throw new UnitException("Нельзя помещать лошадь на бронетраспортер");
         }
-
         parent::addUnit( $unit );
     }
 
     function bombardStrength() {
-        return 0;
+        $ret = 0;
+        foreach( $this->units() as $unit ) {
+            $ret += $unit->bombardStrength();
+        }
+        return $ret;
     }
+
 }
 
 class UnitScript {
@@ -129,10 +121,20 @@ $sub_army->addUnit( new Archer() );
 $sub_army->addUnit( new Archer() );
 $sub_army->addUnit( new Archer() );
 
-UnitScript::joinExisting( new Sapper(), new TroopCarrier() )->bombardStrength();
+$sub_army2 = new Army();
+$sub_army2->addUnit( new Sapper() );
 
-//Добавим вторую армию к первой
+$sub_army3 = new TroopCarrier();
+$sub_army3->addUnit( new Sapper() );
+$sub_army3->addUnit( new Sapper() );
+$sub_army3->addUnit( new Archer() );
+
+$sub_army2->addUnit( UnitScript::joinExisting( new Sapper(), new TroopCarrier() ) );
+
+//Собираем армии в одну
 $main_army->addUnit( $sub_army );
+$main_army->addUnit( $sub_army2 );
+$main_army->addUnit( $sub_army3 );
 
 //Все вычисления выполняются за кулисами
 print "Атакующая сила: {$main_army->bombardStrength()}\n";
