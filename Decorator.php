@@ -21,25 +21,27 @@ abstract class TileDecorator extends Tile {
 }
 
 class DiamondDecorator extends TileDecorator {
-    function getWealthFactor() {
-        return $this->getWealthFactor() + 2;
+    function getWealthFactor() {        
+        return $this->tile->getWealthFactor()+2;
     }
 }
 
 class PollutionDecorator extends TileDecorator {
     function getWealthFactor() {
-        return $this->getWealthFactor() - 4;
+        return $this->tile->getWealthFactor()-4;
     }
 }
 
 $tile = new Plains();
-print $tile->getWealthFactor(); // Возвращается 2
+echo $tile->getWealthFactor(); // Возвращается 2
 
 $tile = new DiamondDecorator( new Plains() );
-print $tile->getWealthFactor(); // Возвращается 4
+echo $tile->getWealthFactor(); // Возвращается 4
 
 $tile = new PollutionDecorator( new DiamondDecorator( new Plains() ) );
-print $tile->getWealthFactor(); // Возвращается 0
+echo $tile->getWealthFactor(); // Возвращается 0
+
+
 
 class RequestHelper{}
 
@@ -47,7 +49,7 @@ abstract class ProcessRequest {
     abstract function process( RequestHelper $req );
 } 
 
-class MainProcess extends RequestHelper {
+class MainProcess extends ProcessRequest {
     function process( RequestHelper $req ) {
         print __CLASS__ . ": выполнение запроса \n";
     }
