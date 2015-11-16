@@ -37,19 +37,42 @@ abstract class Unit {
 
     protected $depth;
 
+    /**
+     * Метод сообщает, что объект не является композитом
+     * 
+     * @return null
+     */
     function getComposite() {
         return null;
     }
 
+    /**
+     * 
+     * 
+     * @param ArmyVisitor $visitor
+     */
     function accept( ArmyVisitor $visitor ) {
         $method = "visit" . get_class( $this );
+        
+        echo  $method . "<br />";
+        
         $visitor->$method( $this );
     }
 
+    /**
+     * Записываем глубину ветки в дереве
+     *
+     * @param int $depth
+     */
     protected function setDepth( $depth ) {
-        $this->depth=$depth;
+        $this->depth = $depth;
     }
 
+    /**
+     * Возвращаем глубину ветки в дереве
+     * 
+     * @return int
+     */
     function getDepth() {
         return $this->depth;
     }
