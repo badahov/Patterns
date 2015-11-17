@@ -1,5 +1,7 @@
 <?php namespace Singleton;
 
+class PreferencesException extends \Exception {}
+
 /**
  * Pattern Singleton
  */
@@ -65,13 +67,13 @@ class Preferences {
      * 
      * @param mixed $key - ключ параметра (константа)
      * @param mixed $val - параметр
-     * @throws Exception
+     * @throws PreferencesException
      */
     protected function set( $key, $val ) {
         if( empty( $this->params[$key] ) ) {
             $this->params[$key] = $val;
         } else {
-            throw new \Exception("Ключ <b>{$key}</b> занят, используйте другой.");
+            throw new PreferencesException("Ключ <b>{$key}</b> занят, используйте другой.");
         }
     }
 
@@ -98,6 +100,6 @@ try {
     //Пробуем переопределить ключ "name"
     Preferences::setProperty( "name", "Ivan" );
 
-} catch ( \Exception $e ) {
+} catch ( PreferencesException $e ) {
     echo 'Error: ',  $e->getMessage(), "\n";
 }
