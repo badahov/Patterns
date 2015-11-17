@@ -15,7 +15,7 @@ class Preferences {
     /**
      * Ссылка на объект.
      *
-     * @var array
+     * @var object
      */
     private static $instance;
 
