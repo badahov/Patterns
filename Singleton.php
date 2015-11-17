@@ -45,6 +45,7 @@ class Preferences {
      * 
      * @param mixed $key - ключ параметра (константа)
      * @param mixed $val - параметр
+     * @return void
      */
     public static function setProperty( $key, $val ) {
         self::instance()->set( $key, $val );
@@ -53,8 +54,8 @@ class Preferences {
     /**
      * Служит оберткой защищенного метода get
      * 
-     * @param mixed $key
-     * @return void
+     * @param mixed $key - ключ параметра
+     * @return mixed
      */
     public static function getProperty( $key ) {
         $pref = self::instance();
@@ -68,6 +69,7 @@ class Preferences {
      * @param mixed $key - ключ параметра (константа)
      * @param mixed $val - параметр
      * @throws PreferencesException
+     * @return void
      */
     protected function set( $key, $val ) {
         if( empty( $this->params[$key] ) ) {
@@ -81,7 +83,7 @@ class Preferences {
      * Возвращает параметр по ключу
      * 
      * @param mixed $key - ключ параметра
-     * @return void
+     * @return mixed
      */
     protected function get( $key ) {
         return $this->params[$key];
