@@ -4,67 +4,100 @@
  * Pattern Singleton
  */
 class Preferences {
-    private $props = [];
+
+    /**
+     * Массив параметров.
+     *
+     * @var array
+     */
+    private $params = [];
+
+    /**
+     * Ссылка на объект.
+     *
+     * @var array
+     */
     private static $instance;
 
+    /**
+     * Закрытый конструктов запрещает создание объекта Preferences
+     * вне класса Preferences
+     */
     private function __construct() {}
 
-    public static function getInstance() {
+    /**
+     * Создание ссылки на объект Preferences или возврат ссылки
+     * на объект Preferences если он уже создан ранее
+     * 
+     * @return object
+     */
+    public static function instance() {
         if( empty( self::$instance ) ) {
-            self::$instance = new Preferences();
+            self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function setProperty( $key, $val ) {
-        if( ! isset( $this->props[$key] ) ) {
-            $this->props[$key] = $val;
+    /**
+     * Добавляет параметры в массив props, выводит исключение если
+     * ключь уже занят запрещая переопределение 
+     * 
+     * @param mixed $key - ключ параметра (константа)
+     * @param mixed $val - параметр
+     * @throws Exception
+     */
+    protected function set( $key, $val ) {
+        if( empty( $this->params[$key] ) ) {
+            $this->params[$key] = $val;
         } else {
-            throw new Exception("Key {$key} busy.");
+            throw new \Exception("Ключ <b>{$key}</b> занят, используйте другой.");
         }
     }
 
-    public function getProperty( $key ) {
-        return $this->props[$key];
+    /**
+     * Возвращает параметр по ключу
+     * 
+     * @param mixed $key - ключ параметра
+     * @return void
+     */
+    protected function get( $key ) {
+        return $this->params[$key];
     }
 
-    public static function setPropertyShort( $key, $val ) {
-        $pref = self::getInstance();
-        $pref->setProperty( $key, $val );
+    /**
+     * Служит оберткой метода set
+     * 
+     * @param mixed $key - ключ параметра (константа)
+     * @param mixed $val - параметр
+     */
+    public static function setProperty( $key, $val ) {
+        self::instance()->set( $key, $val );
     }
 
-    public static function getPropertyShort( $key ) {
-        $pref = self::getInstance();
-        return $pref->getProperty($key);
+    /**
+     * Служит оберткой метода get
+     * 
+     * @param mixed $key
+     * @return void
+     */
+    public static function getProperty( $key ) {
+        $pref = self::instance();
+        return $pref->get($key);
     }
 }
 
-$pref = Preferences::getInstance();
-$pref->setProperty( "name", "Ivan" );
+//Добавление параметра
+Preferences::setProperty( "name", "Иван" );
 
-Preferences::setPropertyShort( "surname", "Ivanov" );
-
-unset( $pref ); // Удаляем ссылку
-
-$pref2 = Preferences::getInstance();
-print $pref2->getProperty( "name" ) . "\n";
-
-print Preferences::getPropertyShort( "surname" ) . "\n";
+//Вывод добавленного ранее параметра на печать
+print Preferences::getProperty( "name" ) . "<br />";
 
 // Проверка исключений
 try {
 
-    $pref = Preferences::getInstance();
-    $pref->setProperty( "surname", "Ivanov" );
+    //Пробуем переопределить ключ "name"
+    Preferences::setProperty( "name", "Ivan" );
 
-} catch ( Exception $e ) {
-    echo 'Error: ',  $e->getMessage(), "\n";
-}
-
-try {
-
-    Preferences::setPropertyShort( "name", "Ivan" );
-
-} catch ( Exception $e ) {
+} catch ( \Exception $e ) {
     echo 'Error: ',  $e->getMessage(), "\n";
 }
