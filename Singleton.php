@@ -20,7 +20,7 @@ class Preferences {
     private static $instance;
 
     /**
-     * Закрытый конструктов запрещает создание объекта Preferences
+     * Закрытый конструктор, запрещает создание объекта Preferences
      * вне класса Preferences
      */
     private function __construct() {}
@@ -39,8 +39,29 @@ class Preferences {
     }
 
     /**
-     * Добавляет параметры в массив props, выводит исключение если
-     * ключь уже занят запрещая переопределение 
+     * Служит оберткой защищенного метода set
+     * 
+     * @param mixed $key - ключ параметра (константа)
+     * @param mixed $val - параметр
+     */
+    public static function setProperty( $key, $val ) {
+        self::instance()->set( $key, $val );
+    }
+
+    /**
+     * Служит оберткой защищенного метода get
+     * 
+     * @param mixed $key
+     * @return void
+     */
+    public static function getProperty( $key ) {
+        $pref = self::instance();
+        return $pref->get($key);
+    }
+
+    /**
+     * Добавляет параметры в массив params, выводит исключение если
+     * ключь уже занят, запрещая переопределение параметра
      * 
      * @param mixed $key - ключ параметра (константа)
      * @param mixed $val - параметр
@@ -63,33 +84,12 @@ class Preferences {
     protected function get( $key ) {
         return $this->params[$key];
     }
-
-    /**
-     * Служит оберткой метода set
-     * 
-     * @param mixed $key - ключ параметра (константа)
-     * @param mixed $val - параметр
-     */
-    public static function setProperty( $key, $val ) {
-        self::instance()->set( $key, $val );
-    }
-
-    /**
-     * Служит оберткой метода get
-     * 
-     * @param mixed $key
-     * @return void
-     */
-    public static function getProperty( $key ) {
-        $pref = self::instance();
-        return $pref->get($key);
-    }
 }
 
-//Добавление параметра
+//Добавление параметра "Иван" в ключ "name"
 Preferences::setProperty( "name", "Иван" );
 
-//Вывод добавленного ранее параметра на печать
+//Вывод добавленного ранее параметра по ключу "name" на печать
 print Preferences::getProperty( "name" ) . "<br />";
 
 // Проверка исключений
