@@ -17,7 +17,7 @@ class Preferences {
     /**
      * Ссылка на объект.
      *
-     * @var object
+     * @var Singleton\Preferences
      */
     private static $instance;
 
@@ -31,7 +31,7 @@ class Preferences {
      * Создание ссылки на объект Preferences или возврат ссылки
      * на объект Preferences если он уже создан ранее
      * 
-     * @return object
+     * @return Singleton\Preferencess
      */
     public static function instance() {
         if( empty( self::$instance ) ) {
