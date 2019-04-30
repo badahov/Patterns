@@ -38,9 +38,15 @@ class Product
     }
 }
 
+/**
+ * Class ProductFacade
+ *
+ * Инкапсулируем функции в интерфейс текущего класса
+ */
 class ProductFacade
 {
     private $products = [];
+    private $file;
 
     function __construct($file)
     {
@@ -51,7 +57,7 @@ class ProductFacade
     private function compile()
     {
         $lines = getProductFileLines($this->file);
-        foreach ($lines as $lines) {
+        foreach ($lines as $line) {
             $id = getIDFromLine($line);
             $name = getNameFromLine($line);
             $this->products[$id] = getProductObjectFromId($id, $name);
