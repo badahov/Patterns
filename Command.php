@@ -1,44 +1,8 @@
 <?php
 
-abstract class Command
-{
-    abstract function execute(CommandContext $context);
-}
-
-class Registry
-{
-    private static $instance;
-
-    private function __construct()
-    {
-    }
-
-    public static function getAccessManager()
-    {
-        if (empty(self::$instance)) {
-            self::$instance = new Registry();
-        }
-        return self::$instance;
-    }
-
-    public function login($user, $pass)
-    {
-        if ($user === 'bob') {
-
-            $user = (object)'User';
-            $user->name = 'bob';
-
-            return $user;
-        }
-    }
-
-    public function getError()
-    {
-        return 'Ошибка доступа';
-    }
-
-}
-
+/**
+ * Class CommandContext
+ */
 class CommandContext
 {
     private $params = [];
@@ -70,6 +34,9 @@ class CommandContext
     }
 }
 
+/**
+ * Class CommandFactory
+ */
 class CommandFactory
 {
     private static $dir = 'commands';
@@ -86,15 +53,20 @@ class CommandFactory
         if (!file_exists($file)) {
             throw new CommandNotFoundException("Файл '$file' не найден");
         }
+
         require_once($file);
         if (!class_exists($class)) {
             throw new CommandNotFoundException("Класс '$class' необнаружен");
         }
         $cmd = new $class();
+
         return $cmd;
     }
 }
 
+/**
+ * Class Controller
+ */
 class Controller
 {
     private $context;

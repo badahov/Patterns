@@ -1,14 +1,23 @@
 <?php namespace AbstractFactory;
 
+/**
+ * Class ApptEncoder
+ *
+ * @package AbstractFactory
+ */
 abstract class ApptEncoder
 {
     abstract function encode();
 }
 
+/**
+ * Class CommsManager
+ *
+ * @package AbstractFactory
+ */
 abstract class CommsManager
 {
-
-    const APPT = 1;
+    const APT = 1;
     const TTD = 2;
     const CONTACT = 3;
 
@@ -19,7 +28,12 @@ abstract class CommsManager
     abstract function getFooterText();
 }
 
-class BloggsApptEncoder extends ApptEncoder
+/**
+ * Class BlogsApptEncoder
+ *
+ * @package AbstractFactory
+ */
+class BlogsApptEncoder extends ApptEncoder
 {
     function encode()
     {
@@ -27,56 +41,73 @@ class BloggsApptEncoder extends ApptEncoder
     }
 }
 
-class BloggsTtdEncoder extends ApptEncoder
+/**
+ * Class BlogsTtdEncoder
+ *
+ * @package AbstractFactory
+ */
+class BlogsTtdEncoder extends ApptEncoder
 {
     function encode()
     {
-        return "Данные закодированы в формате BloggsTtd \n";
+        return "Данные закодированы в формате BlogsTtd \n";
     }
 }
 
-class BloggsContactEncoder extends ApptEncoder
+/**
+ * Class BlogsContactEncoder
+ *
+ * @package AbstractFactory
+ */
+class BlogsContactEncoder extends ApptEncoder
 {
     function encode()
     {
-        return "Данные закодированы в формате BloggsComms \n";
+        return "Данные закодированы в формате BlogsComms \n";
     }
 }
 
-class BloggsCommsManager extends CommsManager
+/**
+ * Class BlogsCommsManager
+ *
+ * @package AbstractFactory
+ */
+class BlogsCommsManager extends CommsManager
 {
     function getHeaderText()
     {
-        return "Bloggs верхний колонтитул\n";
+        return "Blogs верхний колонтитул\n";
     }
 
     function make($flag_int)
     {
         switch ($flag_int) {
-            case self::APPT:
-                return new BloggsApptEncoder();
+            case self::APT:
+                return new BlogsApptEncoder();
                 break;
             case self::CONTACT:
-                return new BloggsContactEncoder();
+                return new BlogsContactEncoder();
                 break;
             case self::TTD:
-                return new BloggsTtdEncoder();
+                return new BlogsTtdEncoder();
+                break;
         }
     }
 
     function getFooterText()
     {
-        return "Bloggs нижний колонтитул\n";;
+        return "Blogs нижний колонтитул\n";;
     }
 }
 
 
-$Bloggs = new BloggsCommsManager();
+$Blogs = new BlogsCommsManager();
 
-print $Bloggs->getHeaderText();
+print $Blogs->getHeaderText();
 
-print $Bloggs->make($Bloggs::APPT)->encode();
-print $Bloggs->make($Bloggs::CONTACT)->encode();
-print $Bloggs->make($Bloggs::TTD)->encode();
+//Три варианта кодировки
+print $Blogs->make($Blogs::APT)->encode();
+print $Blogs->make($Blogs::CONTACT)->encode();
+print $Blogs->make($Blogs::TTD)->encode();
 
-print $Bloggs->getFooterText();
+print $Blogs->getFooterText();
